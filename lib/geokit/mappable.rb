@@ -293,7 +293,7 @@ module Geokit
   class GeoLoc < LatLng
     # Location attributes.  Full address is a concatenation of all values.  For example:
     # 100 Spear St, San Francisco, CA, 94101, US
-    attr_accessor :street_address, :city, :state, :zip, :country_code, :full_address
+    attr_accessor :street_address, :city, :state, :zip, :country_code, :full_address, :bounds
     # Attributes set upon return from geocoding.  Success will be true for successful
     # geocode lookups.  The provider will be set to the name of the providing geocoder.
     # Finally, precision is an indicator of the accuracy of the geocoding.
@@ -353,7 +353,11 @@ module Geokit
     # Sets the street address after capitalizing each word within the street address.
     def street_address=(address)
       @street_address = Geokit::Inflector::titleize(address) if address
-    end  
+    end
+    
+    def bounds=(hash)
+      @bounds= Bounds.normalize([hash[:south], hash[:west]], [hash[:north], hash[:east]] )
+    end
 
     # Returns a comma-delimited string consisting of the street address, city, state,
     # zip, and country code.  Only includes those attributes that are non-blank.
@@ -365,7 +369,7 @@ module Geokit
 
     # Returns a string representation of the instance.
     def to_s
-      "Provider: #{provider}\n Street: #{street_address}\nCity: #{city}\nState: #{state}\nZip: #{zip}\nLatitude: #{lat}\nLongitude: #{lng}\nCountry: #{country_code}\nSuccess: #{success}"
+      "Provider: #{provider}\n Street: #{street_address}\nCity: #{city}\nState: #{state}\nZip: #{zip}\nLatitude: #{lat}\nLongitude: #{lng}\nCountry: #{country_code}\nBounds: #{bounds}\nSuccess: #{success}"
     end
   end
   

@@ -418,6 +418,10 @@ module Geokit
           address_details=doc.elements['//*[local-name() = "AddressDetails"]']
           accuracy = address_details ? address_details.attributes['Accuracy'].to_i : 0
           res.precision=%w{unknown country state state city zip zip+4 street address}[accuracy]
+          if doc.elements['//LatLonBox']  
+            box = doc.elements['//LatLonBox']
+            res.bounds = {:north=>box.attributes['north'],:south=>box.attributes['south'], :east=>box.attributes['east'], :west=>box.attributes['west'] } 
+          end
           res.success=true
           
           return res
